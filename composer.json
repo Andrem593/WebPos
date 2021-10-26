@@ -8,10 +8,12 @@
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "jeroennoten/laravel-adminlte": "^3.7",
         "laravel/framework": "^8.65",
         "laravel/jetstream": "^2.4",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "laraveles/spanish": "^1.5",
         "livewire/livewire": "^2.5"
     },
     "require-dev": {
@@ -19,6 +21,7 @@
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
+        "nascent-africa/jetstrap": "^2.5",
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"
     },
