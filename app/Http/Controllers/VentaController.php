@@ -28,9 +28,20 @@ class VentaController extends Controller
             $request['cantidad'] = 1;
         }
         $producto = Producto::where('nombre', trim($request->producto))->first();
-
+        if (empty($producto)) {
+            $producto = Producto::where('codigo_barras', trim($request->producto))->first();
+        }
         $cart = Cart::add(['id' => $producto->id, 'name' => $producto->nombre, 'qty' => $request['cantidad'], 'price' => $producto->precio, 'weight' => 0, 'options' => ['codigo_barras' => $producto->codigo_barras]]);
+        return 'add';
+    }
+    public function destroy($rowId)
+    {
+        Cart::remove($rowId);
         return view('pedido.index');
-
+    }
+    public function destroyAll()
+    {
+        Cart::destroy();
+        return view('pedido.index');
     }
 }

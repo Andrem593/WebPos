@@ -45,3 +45,11 @@ Route::get('search/productos', [VentaController::class,'autocomplete'])
 Route::post('pedido/producto', [VentaController::class,'store'])
 ->name('pedido.store')
 ->middleware(['auth:sanctum', 'verified']);
+
+Route::delete('pedido/destroy/{rowId}', [VentaController::class,'destroy'])
+->name('pedido.destroy')
+->middleware(['auth:sanctum', 'verified']);
+
+Route::get('pedido/destroyAll', [VentaController::class,'destroyAll'])
+->name('pedido.destroyAll')
+->middleware(['auth:sanctum', 'verified']);
