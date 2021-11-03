@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class TablaPedidos extends Component
 {
-    protected $listeners = ['render' => 'render'];
+    protected $listeners = ['render2' => 'render'];
     
     public function render()
     {

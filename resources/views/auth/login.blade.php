@@ -1,7 +1,9 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <x-jet-authentication-card-logo />
+            <div class="text-center">
+                <img src="./img/LOGO_MINIMARKET.png" class="text-center" width="250px">
+            </div>
         </x-slot>
 
         <div class="card-body">

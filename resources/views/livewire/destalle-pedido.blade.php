@@ -28,10 +28,10 @@
         </div>
         <div class="mx-auto p-2 row">
             <div class="col">
-                <button type="button" class="btn bg-gradient-success w-100"><i class="far fa-money-bill-alt me-1"></i>Pagar Pedido</button>
+                <button id="pedido" type="button" class="btn bg-success w-100"><i class="far fa-money-bill-alt me-1"></i>Pagar Pedido</button>
             </div>
             <div class="col">
-                <a href="{{route('pedido.destroyAll')}}" class="btn bg-gradient-danger w-100"><i class="fa fa-fw fa-trash me-1"></i>Borrar Todo</a>
+                <a href="{{route('pedido.destroyAll')}}" class="btn bg-danger w-100"><i class="fa fa-fw fa-trash me-1"></i>Borrar Todo</a>
             </div>
         </div>
     </div>

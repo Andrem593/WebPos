@@ -19,6 +19,10 @@ class Productos extends Migration
             $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->integer('cantidad');
+            $table->string('unidad_medida')->nullable();
+            $table->string('categoria')->nullable();
+            $table->float('proveedor')->nullable();    
+            $table->float('costo_proveedor')->nullable();
             $table->integer('stock')->nullable();
             $table->float('precio',8,2);
             $table->timestamps();

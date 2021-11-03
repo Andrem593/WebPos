@@ -19,10 +19,21 @@
         </div>
     </div>
     @push('css')
-        <link rel="stylesheet" href="/css/botonesDataTable.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
             integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+
+        </style>
     @endpush
     @push('js')
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
@@ -53,20 +64,86 @@
                     cantidad: $('#cantidad').val(),
                     producto: $('#buscar').val(),
                 }
+                $('#buscar').val('')
+                $('#cantidad').val('')
                 $.ajax({
                     url: "{{ route('pedido.store') }}",
                     method: 'post',
                     data: datos,
                     success: function(data) {
-                        $('#buscar').val('')
-                        $('#cantidad').val('')
-                        if(data == 'add'){
+                        if (data == 'add') {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Producto Agregado'
+                            })
                             Livewire.emit('render')
+                            Livewire.emit('render2')
                         }
                     }
                 })
             })
+            $("body").on("click", ".editar_pro", function(e) {
+                e.preventDefault();
+                let datos = {
+                    cantidad: $(this).parents().parents().children("tr td").find(".btn-group input").val()
+                }
+                let rowId = $(this).parents().children("input.rowId").val();
 
+                $.ajax({
+                    url: "pedido/edit/" + rowId,
+                    method: 'post',
+                    data: datos,
+                    success: function(data) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Producto Actualizado'
+                        })
+                        Livewire.emit('render2')
+                        Livewire.emit('render')
+                    }
+                })
+            })
+            $('#pedido').click(function() {
+                Swal.fire({
+                    title: 'Vas a finalizar el pedido?',
+                    text: "Ingresa el valor que paga el cliente!",
+                    input: 'number',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Continuar',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (valor) => {
+                        return fetch('./pedido/chekout/' + valor, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                            })
+                            .then(response => {
+                                return response.json()
+                            })
+                            .catch(error => {
+                                Swal.showValidationMessage(
+                                    `Request failed: ${error}`
+                                )
+                            })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Venta finalizada El cambio es : $` + result.value
+                        }).then((result) => {
+                            if (result.isConfirmed){
+                                location.reload();
+                            }
+                        })
+                    }
+                })
+            })
+            $("#buscar").focus()
         </script>
     @endpush
 </x-app-layout>

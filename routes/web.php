@@ -53,3 +53,11 @@ Route::delete('pedido/destroy/{rowId}', [VentaController::class,'destroy'])
 Route::get('pedido/destroyAll', [VentaController::class,'destroyAll'])
 ->name('pedido.destroyAll')
 ->middleware(['auth:sanctum', 'verified']);
+
+Route::post('pedido/edit/{rowId}', [VentaController::class,'edit'])
+->name('pedido.edit')
+->middleware(['auth:sanctum', 'verified']);
+
+Route::post('pedido/chekout/{valor}', [VentaController::class,'checkout'])
+->name('pedido.chekout')
+->middleware(['auth:sanctum', 'verified']);
