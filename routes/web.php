@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +21,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[HomeController::class,'index'])->name('dashboard');
 // RUTAS PRODUCTOS
 Route::resource('productos', ProductoController::class)
 ->middleware(['auth:sanctum', 'verified']);
@@ -60,4 +60,10 @@ Route::post('pedido/edit/{rowId}', [VentaController::class,'edit'])
 
 Route::post('pedido/chekout/{valor}', [VentaController::class,'checkout'])
 ->name('pedido.chekout')
+->middleware(['auth:sanctum', 'verified']);
+
+// RUTAS DE USUARIOS
+
+Route::resource('user', UserController::class)
+->names('user')
 ->middleware(['auth:sanctum', 'verified']);

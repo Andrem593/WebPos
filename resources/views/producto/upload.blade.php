@@ -26,7 +26,7 @@
 
                 @section('plugins.BsCustomFileInput', true)
 
-                    <x-adminlte-input-file name="excel" class="" igroup-size="sm" label="Carga archivo (.xls, .xlsx)"
+                    <x-adminlte-input-file name="excel" class="" igroup-size="sm" label="Cargar archivo (.xls, .xlsx)"
                         legend="Seleccionar" placeholder="Escoger un archivo .xls o .xlsx"
                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 

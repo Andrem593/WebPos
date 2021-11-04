@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ProductoController
@@ -18,10 +19,12 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        $productos = Producto::paginate();
-
-        return view('producto.index', compact('productos'))
-            ->with('i', (request()->input('page', 1) - 1) * $productos->perPage());
+        $productos = DB::table('productos')
+            ->join('categorias', 'categorias.id', '=', 'productos.categoria')
+            ->join('proveedores', 'proveedores.id', '=', 'productos.proveedor')
+            ->select('productos.*', 'categorias.nombre as nombre_categoria', 'proveedores.nombre as nombre_proveedor')
+            ->get();
+        return view('producto.index', compact('productos'));
     }
 
     /**
@@ -45,10 +48,29 @@ class ProductoController extends Controller
     {
         request()->validate(Producto::$rules);
 
+        $categoria_id = DB::table('categorias')->where('nombre', 'like', '%' . strtoupper(trim($request->nombre_categoria))  . '%')->value('id');
+
+        if (empty($categoria_id)) {
+            $categoria_id = DB::table('categorias')->insertGetId(
+                array('nombre' => strtoupper(trim($request->nombre_categoria)), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'))
+            );
+        }
+
+        $proveedor_id = DB::table('proveedores')->where('nombre', 'like', '%' . strtoupper(trim($request->nombre_proveedor)) . '%')->value('id');
+
+        if (empty($proveedor_id)) {
+            $proveedor_id = DB::table('proveedores')->insertGetId(
+                array('nombre' => strtoupper(trim($request->nombre_proveedor)), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'))
+            );
+        }
+        $request['categoria'] = $categoria_id;
+        $request['proveedor'] = $proveedor_id;
+        $request['nombre'] = strtoupper(trim($request->nombre));
+        $request['descripcion']  = strtoupper(trim($request->descripcion)); 
         $producto = Producto::create($request->all());
 
         return redirect()->route('productos.index')
-            ->with('success', 'Producto Creadi correctamente.');
+             ->with('success', 'Producto Creado correctamente.');
     }
 
     /**
@@ -133,12 +155,34 @@ class ProductoController extends Controller
         foreach ($data as $key => $row) {
             if ($key >= 1) {
 
+                $categoria_id = DB::table('categorias')->where('nombre', 'like', '%' . strtoupper(trim($row[7]))  . '%')->value('id');
+
+                if (empty($categoria_id)) {
+                    $categoria_id = DB::table('categorias')->insertGetId(
+                        array('nombre' => strtoupper(trim($row[7])), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'))
+                    );
+                }
+
+                $proveedor_id = DB::table('proveedores')->where('nombre', 'like', '%' . strtoupper(trim($row[8])) . '%')->value('id');
+
+                if (empty($proveedor_id)) {
+                    $proveedor_id = DB::table('proveedores')->insertGetId(
+                        array('nombre' => strtoupper(trim($row[8])), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'))
+                    );
+                }
                 $insert_data = array(
-                    'nombre'  => $row[0],
-                    'descripcion'  => $row[1],
-                    'cantidad'  => $row[2],
-                    'stock'  =>  $row[2],
-                    'precio' => $row[3]
+                    'codigo_barras'  => $row[0],
+                    'nombre'  => strtoupper(trim($row[1])),
+                    'descripcion'  => $row[2],
+                    'cantidad'  => $row[3],
+                    'stock'  =>  $row[3],
+                    'unidad_medida'  => strtoupper(trim($row[4])),
+                    'medida'  => $row[5],
+                    'precio' => $row[6],
+                    'categoria' => $categoria_id,
+                    'proveedor' => $proveedor_id,
+                    'costo_proveedor' => $row[9]
+
                 );
                 Producto::create($insert_data);
             }

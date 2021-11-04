@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="h4 font-weight-bold">
-            {{ __('Productos') }}
+            {{ __('Usuarios') }}
         </h2>
     </x-slot>
 
@@ -13,11 +13,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Tabla de Producto') }}
+                                {{ __('Tabla de Usuarios') }}
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('productos.create') }}" class="btn btn-primary btn-sm float-right"
+                                <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm float-right"
                                     data-placement="left">
                                     {{ __('Crear Nuevo') }}
                                 </a>
@@ -37,42 +37,31 @@
                                     <tr>
                                         <th>No</th>
 
-                                        <th>Codigo Barras</th>
                                         <th>Nombre</th>
-                                        <th>Descripcion</th>
-                                        <th>Cantidad</th>
-                                        <th>Stock</th>
-                                        <th>Categoria</th>
-                                        <th>Proveedor</th>
-                                        <th>Precio</th>
-                                        <th>Costo</th>
-
+                                        <th>Correo</th>
+                                        <th>Tipo de usuario</th>
+                                        <th>Fecha Creación</th>                                
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($productos as $producto)
+                                    @foreach ($users as $user)
                                         <tr>
-                                            <td>{{ $producto->id }}</td>
+                                            <td>{{ $user->id }}</td>
 
-                                            <td>{{ $producto->codigo_barras }}</td>
-                                            <td>{{ $producto->nombre }}</td>
-                                            <td>{{ $producto->descripcion }}</td>
-                                            <td>{{ $producto->cantidad }}</td>
-                                            <td>{{ $producto->stock }}</td>
-                                            <td>{{ $producto->nombre_categoria }}</td>
-                                            <td>{{ $producto->nombre_proveedor }}</td>
-                                            <td>${{ number_format($producto->precio,2) }}</td>
-                                            <td>${{ number_format($producto->costo_proveedor,2) }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td></td>
+                                            <td>{{ $user->created_at }}</td>                                            
 
                                             <td>
-                                                <form action="{{ route('productos.destroy', $producto->id) }}"
+                                                <form action="{{ route('user.destroy', $user->id) }}"
                                                     method="POST">
                                                     <a class="btn btn-sm btn-primary "
-                                                        href="{{ route('productos.show', $producto->id) }}"><i
+                                                        href="{{ route('user.show', $user->id) }}"><i
                                                             class="fa fa-fw fa-eye"></i></a>
                                                     <a class="btn btn-sm btn-success"
-                                                        href="{{ route('productos.edit', $producto->id) }}"><i
+                                                        href="{{ route('user.edit', $user->id) }}"><i
                                                             class="fa fa-fw fa-edit"></i></a>
                                                     @csrf
                                                     @method('DELETE')

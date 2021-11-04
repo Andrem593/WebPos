@@ -146,7 +146,7 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => false,
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
@@ -241,7 +241,17 @@ return [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
+        [
+            'text'        => 'Dashboard',
+            'route'         => 'dashboard',
+            'icon'        => 'fas fa-laptop-house me-1',
+        ],
         ['header' => 'ADMINISTRACIÓN'],
+        [
+            'text'        => 'Usuarios',
+            'route'         => 'user.index',
+            'icon'        => 'fas fa-users me-1',
+        ],
         [
             'text'        => 'Productos',
             'route'         => 'productos.index',
@@ -252,11 +262,32 @@ return [
             'route'         => 'productos.upload',
             'icon'        => 'fas fa-file-upload me-1',
         ],
+        [
+            'text'        => 'Proveedores',
+            'route'         => 'productos.index',
+            'icon'        => 'fas fa-truck me-1',
+        ],
         ['header' => 'VENTAS'],
         [
-            'text'        => 'Pedidos',
+            'text'        => 'Ventas',
             'route'         => 'pedidos.index',
             'icon'        => 'fas fa-shopping-cart me-1',
+        ], 
+        ['header' => 'REPORTES'],
+        [
+            'text'        => 'R.Ventas',
+            'route'         => 'productos.index',
+            'icon'        => 'fas fa-file-invoice-dollar me-1',
+        ],
+        [
+            'text'        => 'R.Compras',
+            'route'         => 'productos.index',
+            'icon'        => 'fas fa-funnel-dollar me-1',
+        ],
+        [
+            'text'        => 'Inventario',
+            'route'         => 'productos.index',
+            'icon'        => 'fas fa-clipboard-list me-1',
         ],
     ],
 
@@ -362,6 +393,16 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'BsCustomFileInput' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
                 ],
             ],
         ],
