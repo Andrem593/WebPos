@@ -33,7 +33,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="datatable" class="display table table-striped table-hover">
-                                <thead class="thead bg-primary">
+                                <thead class="thead bg-secondary">
                                     <tr>
                                         <th>No</th>
 

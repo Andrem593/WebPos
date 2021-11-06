@@ -30,7 +30,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Producto mas Vendido</span>
-                    <span class="info-box-number">{{$producto->nombre}}</span>
+                    <span class="info-box-number">{{!empty($producto->nombre)?$producto->nombre : 'SIN DATOS'}}</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>

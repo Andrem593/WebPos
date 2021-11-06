@@ -1,10 +1,10 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="h4 font-weight-bold">
+            {{ __('Proveedores') }}
+        </h2>
+    </x-slot>
 
-@section('template_title')
-    Proveedore
-@endsection
-
-@section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
@@ -13,12 +13,12 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Proveedore') }}
+                                {{ __('Proveedores') }}
                             </span>
 
                              <div class="float-right">
                                 <a href="{{ route('proveedores.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
+                                  {{ __('Crear Nuevo') }}
                                 </a>
                               </div>
                         </div>
@@ -31,12 +31,15 @@
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="thead">
+                            <table id="datatable" class="table table-striped table-hover">
+                                <thead class="thead bg-secondary">
                                     <tr>
                                         <th>No</th>
-                                        
-										<th>Nombre</th>
+
+                                        <th>Ruc</th>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
 										<th>Estado</th>
 
                                         <th></th>
@@ -46,17 +49,27 @@
                                     @foreach ($proveedores as $proveedore)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-											<td>{{ $proveedore->nombre }}</td>
-											<td>{{ $proveedore->estado }}</td>
+                                            <td>{{ $proveedore->ruc }}</td>
+                                            <td>{{ $proveedore->nombre }}</td>
+                                            <td>{{ $proveedore->telefono }}</td>
+                                            <td>{{ $proveedore->correo }}</td>
+											<td>
+                                                @php
+                                                    if($proveedore->estado == 'A' ){
+                                                        echo '<span class="badge bg-success">ACTIVO</span>';
+                                                    }else {
+                                                        echo '<span class="badge bg-danger">INACTIVO</span>';
+                                                    }
+                                                @endphp
+                                            </td>
 
                                             <td>
                                                 <form action="{{ route('proveedores.destroy',$proveedore->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('proveedores.show',$proveedore->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('proveedores.edit',$proveedore->id) }}"><i class="fa fa-fw fa-edit"></i> Edit</a>
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('proveedores.show',$proveedore->id) }}"><i class="fa fa-fw fa-eye"></i> Ver</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('proveedores.edit',$proveedore->id) }}"><i class="fa fa-fw fa-edit"></i> Editar</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> Delete</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> Eliminar</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -66,8 +79,13 @@
                         </div>
                     </div>
                 </div>
-                {!! $proveedores->links() !!}
             </div>
         </div>
     </div>
-@endsection
+    @push('css')
+        <link rel="stylesheet" href="/css/botonesDataTable.css">
+    @endpush
+    @push('js')
+        <script src="js/crearDataTable.js"></script>
+    @endpush
+</x-app-layout>

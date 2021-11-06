@@ -264,8 +264,18 @@ return [
         ],
         [
             'text'        => 'Proveedores',
-            'route'         => 'productos.index',
+            'route'         => 'proveedores.index',
             'icon'        => 'fas fa-truck me-1',
+        ],
+        [
+            'text'        => 'Registro de Compras',
+            'route'         => 'compras.create',
+            'icon'        => 'fas fa-money-check-alt me-1',
+        ],
+        [
+            'text'        => 'Carga de Compras',
+            'route'         => 'compras.index',
+            'icon'        => 'fas fa-upload me-1',
         ],
         ['header' => 'VENTAS'],
         [

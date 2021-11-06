@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\CompraController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ProveedoreController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\UserController;
 
@@ -42,6 +44,10 @@ Route::get('search/productos', [VentaController::class,'autocomplete'])
 ->name('search.productos')
 ->middleware(['auth:sanctum', 'verified']);
 
+Route::get('search/productos/proveedor', [VentaController::class,'productos_proveedor'])
+->name('search.productos_proveedor')
+->middleware(['auth:sanctum', 'verified']);
+
 Route::post('pedido/producto', [VentaController::class,'store'])
 ->name('pedido.store')
 ->middleware(['auth:sanctum', 'verified']);
@@ -66,4 +72,20 @@ Route::post('pedido/chekout/{valor}', [VentaController::class,'checkout'])
 
 Route::resource('user', UserController::class)
 ->names('user')
+->middleware(['auth:sanctum', 'verified']);
+
+// RUTAS DE PROVEEDORES
+
+Route::resource('proveedores', ProveedoreController::class)
+->names('proveedores')
+->middleware(['auth:sanctum', 'verified']);
+
+// RUTAS DE COMPRAS
+
+Route::resource('compras', CompraController::class)
+->names('compras')
+->middleware(['auth:sanctum', 'verified']);
+
+Route::post('compas/saveExcel', [CompraController::class,'saveExcel'])
+->name('compras.saveExcel')
 ->middleware(['auth:sanctum', 'verified']);

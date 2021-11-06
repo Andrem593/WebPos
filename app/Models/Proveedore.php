@@ -21,7 +21,7 @@ class Proveedore extends Model
     
     static $rules = [
 		'nombre' => 'required',
-		'estado' => 'required',
+		'ruc' => 'required',
     ];
 
     protected $perPage = 20;
@@ -31,7 +31,7 @@ class Proveedore extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre','estado'];
+    protected $fillable = ['nombre','estado','ruc','telefono','correo'];
 
 
 

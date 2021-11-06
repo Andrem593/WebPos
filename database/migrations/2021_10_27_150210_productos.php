@@ -18,7 +18,7 @@ class Productos extends Migration
             $table->string('codigo_barras')->unique()->nullable();
             $table->string('nombre');
             $table->string('descripcion')->nullable();
-            $table->integer('cantidad');
+            $table->float('cantidad',8,2);
             $table->string('unidad_medida')->nullable();
             $table->string('medida')->nullable();
             $table->integer('categoria')->nullable();

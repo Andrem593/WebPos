@@ -25,6 +25,18 @@ class VentaController extends Controller
         }
         return $label;
     }
+    public function productos_proveedor(Request $request)
+    {
+        $productos = Producto::where('nombre', 'LIKE', '%' . $request->term . '%')
+            ->where('proveedor','=',$request->proveedor)
+            ->orWhere('codigo_barras', 'LIKE', '%' . $request->term . '%')
+            ->where('proveedor','=',$request->proveedor)->get();
+        $label = [];
+        foreach ($productos as $val) {
+            array_push($label, $val->nombre);
+        }
+        return $label;
+    }
     public function store(Request $request)
     {
         if (empty($request['cantidad'])) {
