@@ -89,3 +89,15 @@ Route::resource('compras', CompraController::class)
 Route::post('compas/saveExcel', [CompraController::class,'saveExcel'])
 ->name('compras.saveExcel')
 ->middleware(['auth:sanctum', 'verified']);
+
+// RUTAS DE REPORTES
+
+Route::get('reporte/ventas', [HomeController::class,'reporte_ventas'])
+->name('reporte.ventas')
+->middleware(['auth:sanctum', 'verified']);
+Route::get('reporte/compras', [HomeController::class,'reporte_compras'])
+->name('reporte.compras')
+->middleware(['auth:sanctum', 'verified']);
+Route::get('reporte/inventario', [HomeController::class,'inventario'])
+->name('reporte.inventario')
+->middleware(['auth:sanctum', 'verified']);

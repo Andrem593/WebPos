@@ -286,17 +286,17 @@ return [
         ['header' => 'REPORTES'],
         [
             'text'        => 'R.Ventas',
-            'route'         => 'productos.index',
+            'route'         => 'reporte.ventas',
             'icon'        => 'fas fa-file-invoice-dollar me-1',
         ],
         [
             'text'        => 'R.Compras',
-            'route'         => 'productos.index',
+            'route'         => 'reporte.compras',
             'icon'        => 'fas fa-funnel-dollar me-1',
         ],
         [
             'text'        => 'Inventario',
-            'route'         => 'productos.index',
+            'route'         => 'reporte.inventario',
             'icon'        => 'fas fa-clipboard-list me-1',
         ],
     ],

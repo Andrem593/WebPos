@@ -16,7 +16,7 @@
                     <span class="info-box-text">Productos Vendidos</span>
                     <span class="info-box-number">
                         <small>#</small>
-                        {{$pedidos->count()}}
+                        {{ $pedidos->count() }}
                     </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -30,7 +30,8 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Producto mas Vendido</span>
-                    <span class="info-box-number">{{!empty($producto->nombre)?$producto->nombre : 'SIN DATOS'}}</span>
+                    <span
+                        class="info-box-number">{{ !empty($producto->nombre) ? $producto->nombre : 'SIN DATOS' }}</span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -45,7 +46,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Ventas del Día</span>
                     <span class="info-box-number">
-                        ${{number_format($ventas,2)}}
+                        ${{ number_format($ventas, 2) }}
                     </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -60,7 +61,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Ventas del Mes</span>
                     <span class="info-box-number">
-                        ${{number_format($ventas_mes,2)}}
+                        ${{ number_format($ventas_mes, 2) }}
                     </span>
                 </div>
                 <!-- /.info-box-content -->
@@ -81,14 +82,21 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">820</span>
-                            <span>Visitors Over Time</span>
+                            <span class="text-bold text-lg">{{ $productos_vendidos }}</span>
+                            <span>Productos vendidos en la semana</span>
                         </p>
                         <p class="ml-auto d-flex flex-column text-right">
-                            <span class="text-success">
-                                <i class="fas fa-arrow-up"></i> 12.5%
-                            </span>
-                            <span class="text-muted">Since last week</span>
+                            @if ($incremento > 0)
+                                <span class="text-success">
+                                    <i class="fas fa-arrow-up"></i> {{ $incremento }}%
+                                </span>
+                            @else
+                                <span class="text-danger">
+                                    <i class="fas fa-arrow-down"></i> {{ $incremento }}%
+                                </span>
+                            @endif
+
+                            <span class="text-muted">Desde la semana pasada</span>
                         </p>
                     </div>
                     <!-- /.d-flex -->
@@ -252,7 +260,7 @@
                 // eslint-disable-next-line no-unused-vars
                 var visitorsChart = new Chart($visitorsChart, {
                     data: {
-                        labels: ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'],
+                        labels: ['lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
                         datasets: [{
                                 type: 'line',
                                 data: [100, 120, 170, 167, 180, 177, 160],
@@ -315,8 +323,6 @@
                     }
                 })
             })
-
-            // lgtm [js/unused-local-variable]
 
         </script>
     @endpush
