@@ -29,23 +29,31 @@
                             <table id="datatable" class="display table table-striped table-hover">
                                 <thead class="thead bg-secondary">
                                     <tr>
-                                        <th>No</th>
-
-                                        <th>Codigo Barras</th>
-                                        <th>Nombre</th>
-                                        <th>Descripcion</th>
-                                        <th>Cantidad</th>
-                                        <th>Stock</th>
-                                        <th>Categoria</th>
-                                        <th>Proveedor</th>
-                                        <th>Precio</th>
-                                        <th>Costo</th>
-
-                                        <th></th>
+                                        <th>CODIGO</th>
+                                        <th>PRODUCTO</th>
+                                        <th>DESCRIPCION</th>
+                                        <th>CANTIDAD</th>
+                                        <th>STOCK</th>
+                                        <th>CATEGORIA</th>
+                                        <th>PROVEEDOR</th>
+                                        <th>PRECIO</th>
+                                        <th>COSTO</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    @foreach ($productos as $producto)
+                                        <tr>
+                                            <td>{{ $producto->codigo_barras }}</td>
+                                            <td>{{ $producto->nombre }}</td>
+                                            <td>{{ $producto->descripcion }}</td>
+                                            <td>{{ $producto->cantidad }}</td>
+                                            <td>{{ $producto->stock }}</td>
+                                            <td>{{ $producto->nombre_categoria }}</td>
+                                            <td>{{ $producto->nombre_proveedor }}</td>
+                                            <td>${{ number_format($producto->precio,2) }}</td>
+                                            <td>${{ number_format($producto->costo_proveedor,2) }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -58,6 +66,6 @@
         <link rel="stylesheet" href="/css/botonesDataTable.css">
     @endpush
     @push('js')
-        <script src="js/crearDataTable.js"></script>
+        <script src="../js/crearDataTable.js"></script>
     @endpush
 </x-app-layout>

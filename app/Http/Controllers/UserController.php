@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -25,8 +26,12 @@ class UserController extends Controller
     }
     public function store(Request $request)
     {
-        $user = User::create($request->all());
-
+        $request['password'] = Hash::make($request->password);
+        if($request->tipo_usuario == 'ADMINISTRADOR'){
+            $user = User::create($request->all())->assignRole('ADMINISTRADOR');
+        }else{
+            $user = User::create($request->all())->assignRole('VENDEDOR');
+        }
         return redirect()->route('user.index')
              ->with('success', 'Usuario Creado correctamente.');
     }

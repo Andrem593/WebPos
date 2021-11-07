@@ -41,20 +41,31 @@ class homeController extends Controller
         $incremento = $productos_vendidos_sp > 0 ? number_format(((($productos_vendidos - $productos_vendidos_sp) / $productos_vendidos_sp) * 100), 2) : 100;
         return view('dashboard', compact('pedidos', 'producto', 'ventas', 'ventas_mes', 'productos_vendidos', 'incremento'));
     }
-    public function reporte_ventas()
+    public function reporte_ventas(Request $request)
     {
         $ventas = DB::table('pedidos')
             ->join('productos', 'productos.id', '=', 'pedidos.id_producto')
-            ->join('categorias','categorias.id','=','productos.categoria')
-            ->select('pedidos.*', 'productos.nombre as nombre_producto',  'productos.costo_proveedor', 'productos.codigo_barras', 'categorias.nombre as nombre_categoria')           
+            ->join('categorias', 'categorias.id', '=', 'productos.categoria')
+            ->select('pedidos.*', 'productos.nombre as nombre_producto',  'productos.costo_proveedor', 'productos.codigo_barras', 'categorias.nombre as nombre_categoria')
             ->get();
-        return view('reportes.ventas',compact('ventas'));
+
+        if (!empty($request->desde)) {
+            $desde = $request->desde;
+            $hasta = date("Y-m-d", strtotime($request->hasta . "+ 1 days"));
+            $ventas = DB::table('pedidos')
+                ->join('productos', 'productos.id', '=', 'pedidos.id_producto')
+                ->join('categorias', 'categorias.id', '=', 'productos.categoria')
+                ->select('pedidos.*', 'productos.nombre as nombre_producto',  'productos.costo_proveedor', 'productos.codigo_barras', 'categorias.nombre as nombre_categoria')
+                ->where('pedidos.created_at', '>=', $desde)->where('pedidos.created_at', '<', $hasta)
+                ->get();
+        }
+        return view('reportes.ventas', compact('ventas'));
     }
     public function reporte_compras(Request $request)
     {
         $compras = DB::table('compras')->join('proveedores', 'proveedores.id', '=', 'compras.id_proveedor')
             ->join('productos', 'productos.id', '=', 'compras.id_producto')
-            ->select('compras.*', 'productos.nombre as nombre_producto', 'proveedores.nombre as nombre_proveedor', 'proveedores.ruc as ruc_proveedor', 'productos.costo_proveedor', 'productos.codigo_barras')           
+            ->select('compras.*', 'productos.nombre as nombre_producto', 'proveedores.nombre as nombre_proveedor', 'proveedores.ruc as ruc_proveedor', 'productos.costo_proveedor', 'productos.codigo_barras')
             ->get();
         if (!empty($request->desde)) {
             $desde = $request->desde;
@@ -69,6 +80,11 @@ class homeController extends Controller
     }
     public function inventario()
     {
-        return view('reportes.inventario');
+        $productos = DB::table('productos')
+            ->join('categorias', 'categorias.id', '=', 'productos.categoria')
+            ->join('proveedores', 'proveedores.id', '=', 'productos.proveedor')
+            ->select('productos.*', 'categorias.nombre as nombre_categoria', 'proveedores.nombre as nombre_proveedor')
+            ->get();
+        return view('reportes.inventario', compact('productos'));
     }
 }

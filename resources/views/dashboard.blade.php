@@ -76,7 +76,9 @@
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                         <h3 class="card-title">Ventas en la Semana</h3>
-                        <a href="#">Ver reporte</a>
+                        @can('reporte.ventas')                            
+                            <a href="{{ route('reporte.ventas') }}">Ver reporte</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body">
@@ -132,7 +134,9 @@
                 <div class="card-header border-0">
                     <div class="d-flex justify-content-between">
                         <h3 class="card-title">Ventas en el Mes</h3>
-                        <a href="javascript:void(0);">View Report</a>
+                        @can('reporte.ventas')
+                            <a href="{{ route('reporte.ventas') }}">Ver Reporte</a>
+                        @endcan
                     </div>
                 </div>
                 <div class="card-body">
