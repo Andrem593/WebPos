@@ -26,6 +26,7 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[HomeController::class,'index'])->name('dashboard');
 // RUTAS PRODUCTOS
 Route::resource('productos', ProductoController::class)
+->names('productos')
 ->middleware(['auth:sanctum', 'verified']);
 
 Route::middleware(['auth:sanctum', 'verified'])

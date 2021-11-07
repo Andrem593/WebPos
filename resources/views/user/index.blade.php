@@ -51,7 +51,7 @@
 
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
-                                            <td></td>
+                                            <td>{{ $user->tipo_usuario }}</td>
                                             <td>{{ $user->created_at }}</td>                                            
 
                                             <td>

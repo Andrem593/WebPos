@@ -13,6 +13,14 @@
             {{ Form::text('email', $user->email, ['class' => 'form-control' . ($errors->has('email') ? ' is-invalid' : ''), 'placeholder' => 'email del usuario']) }}
             {!! $errors->first('email', '<div class="invalid-feedback">:message</p>') !!}
         </div>
+        <div class="mb-3">
+            <x-jet-label value="{{ __('Tipo de Usuario') }}" />
+
+            <select name="tipo_usuario" class="form-select">
+                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                <option value="VENDEDOR">VENDEDOR</option>
+            </select>
+        </div>
 
         <div class="mb-3">
             <x-jet-label value="{{ __('Password') }}" />
