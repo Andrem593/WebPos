@@ -63,10 +63,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $total_factura = 0
+                                    @endphp
                                     @foreach ($compras as $compra)
                                         <tr>
                                             <td>{{ $compra->numero_factura }}</td>
-
                                             <td>{{ $compra->codigo_barras }}</td>
                                             <td>{{ $compra->nombre_producto }}</td>
                                             <td>{{ $compra->ruc_proveedor }}</td>
@@ -75,8 +77,23 @@
                                             <td>${{ number_format($compra->costo_proveedor, 2) }}</td>
                                             <td>${{ number_format($compra->total_factura, 2) }}</td>
                                         </tr>
+                                        @php
+                                            $total_factura += $compra->total_factura;
+                                        @endphp
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>TOTAL</th>
+                                        <th>${{ number_format($total_factura, 2) }}</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>

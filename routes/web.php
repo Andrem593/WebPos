@@ -69,6 +69,10 @@ Route::post('pedido/chekout/{valor}', [VentaController::class,'checkout'])
 ->name('pedido.chekout')
 ->middleware(['auth:sanctum', 'verified']);
 
+Route::post('reporte_venta/editar', [VentaController::class,'funcionesVentas'])
+->name('pedido.editarVentas')
+->middleware(['auth:sanctum', 'verified']);
+
 // RUTAS DE USUARIOS
 
 Route::resource('user', UserController::class)
@@ -101,4 +105,8 @@ Route::get('reporte/compras', [HomeController::class,'reporte_compras'])
 ->middleware(['auth:sanctum', 'verified']);
 Route::get('reporte/inventario', [HomeController::class,'inventario'])
 ->name('reporte.inventario')
+->middleware(['auth:sanctum', 'verified']);
+
+Route::get('reporte/lista_ventas', [HomeController::class,'ventas'])
+->name('reporte.lista_ventas')
 ->middleware(['auth:sanctum', 'verified']);

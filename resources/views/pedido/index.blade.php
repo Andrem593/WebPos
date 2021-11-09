@@ -107,14 +107,14 @@
                 Swal.fire({
                     title: 'Vas a finalizar el pedido?',
                     text: "Ingresa el valor que paga el cliente!",
-                    input: 'number',
+                    input: 'text',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Continuar',
                     showLoaderOnConfirm: true,
                     preConfirm: (valor) => {
-                        return fetch('./pedido/chekout/' + valor, {
+                        return fetch('http://localhost:8000/pedido/chekout/' + valor, {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -132,18 +132,26 @@
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: `Venta finalizada El cambio es : $` + result.value
-                        }).then((result) => {
-                            if (result.isConfirmed){
-                                location.reload();
-                            }
-                        })
+                        if (result.value.error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: result.value.message
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: `Venta finalizada \n El cambio es : $` + result.value.toFixed(2)
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.href = 'http://localhost:8000/pedidos';
+                                }
+                            })
+                        }
                     }
                 })
             })
             $("#buscar").focus()
+
         </script>
     @endpush
 </x-app-layout>

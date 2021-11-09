@@ -87,4 +87,9 @@ class homeController extends Controller
             ->get();
         return view('reportes.inventario', compact('productos'));
     }
+    public function ventas()
+    {
+        $ventas = DB::table('ventas')->get();
+        return view('reportes.ventas_totales', compact('ventas'));
+    }
 }
