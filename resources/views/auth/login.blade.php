@@ -2,7 +2,7 @@
     <x-jet-authentication-card>
         <x-slot name="logo">
             <div class="text-center">
-                <img src="./img/LOGO_MINIMARKET.png" class="text-center" width="250px">
+                <img src="./img/LOGO_MINIMARKET.jpg" class="text-center" width="180px">
             </div>
         </x-slot>
 

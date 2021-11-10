@@ -6,6 +6,7 @@ use App\Models\Pedido;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use App\Models\Venta;
+use Illuminate\Support\Facades\DB;
 use Cart;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,9 +29,9 @@ class VentaController extends Controller
     public function productos_proveedor(Request $request)
     {
         $productos = Producto::where('nombre', 'LIKE', '%' . $request->term . '%')
-            ->where('proveedor','=',$request->proveedor)
+            ->where('proveedor', '=', $request->proveedor)
             ->orWhere('codigo_barras', 'LIKE', '%' . $request->term . '%')
-            ->where('proveedor','=',$request->proveedor)->get();
+            ->where('proveedor', '=', $request->proveedor)->get();
         $label = [];
         foreach ($productos as $val) {
             array_push($label, $val->nombre);
@@ -61,41 +62,119 @@ class VentaController extends Controller
     }
     public function edit($rowId)
     {
-        Cart::update($rowId, $_POST['cantidad']); 
+        Cart::update($rowId, $_POST['cantidad']);
     }
-    public function checkout($valor){
-        $cambio = $valor - Cart::total();
-        $contenido_cart = Cart::content(); 
-        $id_pedidos= '';
-        foreach ($contenido_cart as $contenido) {
-            $total = ($contenido->price * $contenido->qty);
-            $codigo_barras = $contenido->options->codigo_barras;
-            if (empty($codigo_barras)) {
-                $codigo_barras = '';
+    public function checkout($valor)
+    {
+        if ($valor > Cart::total()) {
+            $cambio = $valor - Cart::total();
+            $contenido_cart = Cart::content();
+            $id_pedidos = '';
+            foreach ($contenido_cart as $contenido) {
+                $total = ($contenido->price * $contenido->qty);
+                $codigo_barras = $contenido->options->codigo_barras;
+                if (empty($codigo_barras)) {
+                    $codigo_barras = '';
+                }
+                $pedido = Pedido::create([
+                    'id_producto' => $contenido->id,
+                    'codigo_barras' => $codigo_barras,
+                    'cantidad' => $contenido->qty,
+                    'precio' => $contenido->price,
+                    'total' => $total
+                ]);
+                $id_pedidos .= $pedido->id . '|';
+                $producto = Producto::find($contenido->id);
+                $stock = ($producto->stock - $pedido->cantidad);
+                $producto->update([
+                    'stock' => $stock
+                ]);
             }
-            $pedido = Pedido::create([
-                'id_producto' => $contenido->id,
-                'codigo_barras' => $codigo_barras,
-                'cantidad' => $contenido->qty,
-                'precio' => $contenido->price,
-                'total' => $total
+            $venta = Venta::create([
+                'id_pedidos' => $id_pedidos,
+                'cantidad_total' => Cart::count(),
+                'subtotal' => Cart::subtotal(),
+                'impuesto' => Cart::tax(),
+                'total' => Cart::total(),
+                'usuario' => Auth::user()->name,
             ]);
-            $id_pedidos .= $pedido->id.'|'; 
-            $producto = Producto::find($contenido->id);
-            $stock = ($producto->stock - $pedido->cantidad);
-            $producto->update([
-                'stock'=> $stock
-            ]);
+            $id_pedidos = str_replace('|', ',', $id_pedidos);
+            $id_pedidos = substr($id_pedidos, 0, -1);
+            DB::unprepared('update pedidos set id_venta = ' . $venta->id . ' where id in (' . $id_pedidos . ')');
+            Cart::destroy();
+            return $cambio;
+        } else {
+            $response = array(
+                'error' => true,
+                'message' => 'El valor ingresado es menor al total de la cuenta'
+            );
+            return $response;
         }
-        Venta::create([
-            'id_pedidos' => $id_pedidos ,
-            'cantidad_total' => Cart::count(),
-            'subtotal' => Cart::subtotal(),
-            'impuesto' => Cart::tax(),
-            'total' => Cart::total(),
-            'usuario' => Auth::user()->name,
-        ]);
-        Cart::destroy();
-        return $cambio;
+    }
+    public function funcionesVentas(Request $request)
+    {
+        if ($request->funcion == 'editar_venta') {
+            if ($request->cantidad != $request->cantidad_anterior && !empty($request->cantidad)) {
+                $venta = DB::table('pedidos')->where('id', '=', $request->id_venta)->first();
+                $producto = DB::table('productos')->where('id', '=', $venta->id_producto)->first();
+                DB::table('pedidos')->where('id', '=', $request->id_venta)->update([
+                    'cantidad' => $request->cantidad,
+                    'total' => ($request->cantidad * $venta->precio),
+                ]);
+                DB::table('productos')->where('id', '=', $venta->id_producto)->update([
+                    'stock' => $producto->stock - ($request->cantidad - $request->cantidad_anterior)
+                ]);
+                $venta_final = DB::table('pedidos')->where('id_venta', '=', $venta->id_venta)->get();
+                $cantidad = 0;
+                $total = 0;
+                foreach ($venta_final as $val) {
+                    $cantidad += $val->cantidad;
+                    $total += $val->total;
+                }
+                DB::table('ventas')->where('id', '=', $venta->id_venta)->update([
+                    'cantidad_total' => $cantidad,
+                    'subtotal' => $total,
+                    'total' => $total,
+                ]);
+                $response = array(
+                    'response' => 'success',
+                    'message' => 'Venta Actualizada correctamente'
+                );
+            } else {
+                $response = array(
+                    'response' => 'error',
+                    'message' => 'Ingrese una cantidad correcta para poder editar '
+                );
+            }
+            return $response;
+        }
+        if ($request->funcion == 'eliminar_venta') {
+            $venta = DB::table('pedidos')->where('id', '=', $request->id_venta)->first();
+            $producto = DB::table('productos')->where('id', '=', $venta->id_producto)->first();
+            DB::table('pedidos')->where('id', '=', $request->id_venta)->delete();
+            DB::table('productos')->where('id', '=', $venta->id_producto)->update([
+                'stock' => ($producto->stock + $request->cantidad)
+            ]);
+            $venta_final = DB::table('pedidos')->where('id_venta', '=', $venta->id_venta)->get();
+            $cantidad = 0;
+            $total = 0;
+            foreach ($venta_final as $val) {
+                $cantidad += $val->cantidad;
+                $total += $val->total;
+            }
+            DB::table('ventas')->where('id', '=', $venta->id_venta)->update([
+                'cantidad_total' => $cantidad,
+                'subtotal' => $total,
+                'total' => $total,
+            ]);
+            if ($cantidad == 0 && $total == 0) {
+                DB::table('ventas')->where('id', '=', $venta->id_venta)->delete();
+            }
+            $response = array(
+                'response' => 'success',
+                'message' => 'Venta eliminada correctamente',
+            );
+            return $response;
+        }
     }
 }

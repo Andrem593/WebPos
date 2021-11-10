@@ -46,7 +46,7 @@ return [
     */
 
     'logo' => '<b>El</b> Ingeniero',
-    'logo_img' => 'img/logo.png',
+    'logo_img' => 'img/logo.jpg',
     'logo_img_class' => 'brand-image',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -292,6 +292,11 @@ return [
             'route'         => 'pedidos.index',
             'icon'        => 'fas fa-shopping-cart me-1',
         ], 
+        [
+            'text'        => 'Registro Ventas',
+            'route'         => 'reporte.lista_ventas',
+            'icon'        => 'fas fa-shopping-cart me-1',
+        ],
         ['header' => 'REPORTES',
             'can' => 'reporte.ventas',
         ],

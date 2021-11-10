@@ -3,6 +3,9 @@
     position: relative !important;
     top: 35px;
   }
+  .page-link {
+    bottom: 65px;
+  }
   @media screen and (max-width: 500px){
     .btn-group, .btn-group-vertical {
       position: relative !important;

@@ -38,9 +38,14 @@
                                         <th>PROVEEDOR</th>
                                         <th>PRECIO</th>
                                         <th>COSTO</th>
+                                        <th>TOTAL</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $total_costo = 0;
+                                        $total_stock = 0;
+                                    @endphp
                                     @foreach ($productos as $producto)
                                         <tr>
                                             <td>{{ $producto->codigo_barras }}</td>
@@ -50,11 +55,30 @@
                                             <td>{{ $producto->stock }}</td>
                                             <td>{{ $producto->nombre_categoria }}</td>
                                             <td>{{ $producto->nombre_proveedor }}</td>
-                                            <td>${{ number_format($producto->precio,2) }}</td>
-                                            <td>${{ number_format($producto->costo_proveedor,2) }}</td>
+                                            <td>${{ number_format($producto->precio, 2) }}</td>
+                                            <td>${{ number_format($producto->costo_proveedor, 2) }}</td>
+                                            <td>${{ number_format($producto->costo_proveedor * $producto->cantidad , 2) }}</td>
                                         </tr>
+                                        @php
+                                            $total_stock += $producto->stock;
+                                            $total_costo += $producto->costo_proveedor * $producto->cantidad;
+                                        @endphp
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>TOTAL</th>
+                                        <th>${{ number_format($total_costo, 2) }}</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
