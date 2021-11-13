@@ -110,3 +110,11 @@ Route::get('reporte/inventario', [HomeController::class,'inventario'])
 Route::get('reporte/lista_ventas', [HomeController::class,'ventas'])
 ->name('reporte.lista_ventas')
 ->middleware(['auth:sanctum', 'verified']);
+
+Route::post('venta/token_eliminar', [VentaController::class,'token_eliminar'])
+->name('pedido.token')
+->middleware(['auth:sanctum', 'verified']);
+
+Route::post('venta/listar_pedidos', [VentaController::class,'listar_pedidos'])
+->name('pedido.listar_pedidos')
+->middleware(['auth:sanctum', 'verified']);
