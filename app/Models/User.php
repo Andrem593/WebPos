@@ -30,6 +30,7 @@ class User extends Authenticatable
         'email',
         'tipo_usuario',
         'password',
+        'token_eliminar'
     ];
 
     /**

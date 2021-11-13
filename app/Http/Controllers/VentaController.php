@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Pedido;
 use App\Models\Producto;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Venta;
 use Illuminate\Support\Facades\DB;
 use Cart;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 class VentaController extends Controller
@@ -22,7 +24,7 @@ class VentaController extends Controller
             ->orWhere('codigo_barras', 'LIKE', '%' . $request->term . '%')->get();
         $label = [];
         foreach ($productos as $val) {
-            array_push($label, $val->nombre);
+            array_push($label, $val->nombre.' | '.$val->descripcion);
         }
         return $label;
     }
@@ -43,7 +45,8 @@ class VentaController extends Controller
         if (empty($request['cantidad'])) {
             $request['cantidad'] = 1;
         }
-        $producto = Producto::where('nombre', trim($request->producto))->first();
+        $cadena = explode('|',$request->producto); 
+        $producto = Producto::where('nombre', trim($cadena[0]))->where('descripcion',trim($cadena[1]))->first();
         if (empty($producto)) {
             $producto = Producto::where('codigo_barras', trim($request->producto))->first();
         }
@@ -176,5 +179,37 @@ class VentaController extends Controller
             );
             return $response;
         }
+        if ($request->funcion == 'eliminar_venta_total') {
+            $pedidos = DB::table('pedidos')->where('id_venta', '=', $request->id_venta)->get();
+            foreach ($pedidos as $value) {
+                $producto = DB::table('productos')->where('id', '=', $value->id_producto)->first();
+                DB::table('productos')->where('id', '=', $value->id_producto)->update([
+                    'stock' => ($producto->stock + $value->cantidad)
+                ]);
+            }
+            DB::table('ventas')->where('id', '=', $request->id_venta)->delete();
+            DB::table('pedidos')->where('id_venta', '=', $request->id_venta)->delete();
+        }
+    }
+    public function token_eliminar(Request $request){
+
+        $token = User::where('toke_eliminar','=',$request->token)->get();
+        if($token->count()>0){
+             $response = ['response'=>'correcto'];
+             User::where('id','=',$token[0]->id)->update([
+                 'toke_eliminar'=> Str::random(10)
+             ]);
+        }else {
+            $response = ['response'=>'error'];
+        }
+        return $response;
+    }
+    public function listar_pedidos(Request $request){
+        $pedidos = DB::table('pedidos')->join('productos','productos.id','=','pedidos.id_producto')->select('pedidos.*','productos.nombre')->where('id_venta', '=', $request->id_pedido)->get();
+        $json = [];
+        foreach ($pedidos as $value) {
+            array_push($json,$value);
+        }
+        return $json;
     }
 }

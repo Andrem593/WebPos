@@ -51,7 +51,7 @@
                                 <thead class="thead bg-secondary">
                                     <tr>
                                         <th width="10px">ID</th>
-                                        <th  width="15px">CANTIDAD</th>
+                                        <th width="15px">CANTIDAD</th>
                                         <th>SUBTOTAL</th>
                                         <th>IMPUESTO</th>
                                         <th>TOTAL</th>
@@ -67,7 +67,9 @@
                                     @foreach ($ventas as $venta)
                                         <tr>
                                             <td>{{ $venta->id }}</td>
-                                            <td><center>{{ $venta->cantidad_total }}</center></td>
+                                            <td>
+                                                <center>{{ $venta->cantidad_total }}</center>
+                                            </td>
 
                                             <td>${{ number_format($venta->subtotal, 2) }}</td>
                                             <td>${{ number_format($venta->impuesto, 2) }}</td>
@@ -75,6 +77,8 @@
                                             <td>{{ $venta->usuario }}</td>
                                             <td>{{ date_format(date_create($venta->created_at), 'd-m-Y') }}</td>
                                             <td>
+                                                <a class="detalle btn btn-sm btn-primary" href="" data-toggle="modal"
+                                                    data-target="#detalle"><i class="fa fa-fw fa-eye"></i></a>
                                                 <a type='button' class="eliminar btn btn-danger btn-sm"
                                                     data-toggle="modal" data-target="#eliminar"><i
                                                         class="fa fa-fw fa-trash"></i></a>
@@ -140,6 +144,39 @@
             </div>
         </div>
     </div>
+    <div class="modal lg" id="detalle" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle de Productos Vendidos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_detalle_venta">
+                    <table id="tabla_detalle" class="display table table-striped table-hover">
+                        <thead class="thead bg-secondary">
+                            <tr>
+                                <th width="10px">ID</th>
+                                <th>NOMBRE</th>
+                                <th>CANTIDAD</th>
+                                <th>FECHA VENTA</th>
+                                <th>PVP</th>
+                                <th>TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="detalle_venta" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     @push('css')
         <link rel="stylesheet" href="/css/botonesDataTable.css">
     @endpush
@@ -147,6 +184,7 @@
         <script src="../js/crearDataTable.js"></script>
         <script>
             $("#eliminar_venta").on('click', function() {
+                $('#eliminar .close').click();
                 let datos = {
                     id_venta: $("#id_venta").val(),
                     funcion: 'eliminar_venta_total'
@@ -156,23 +194,63 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                $.ajax({
-                    url: "{{ route('pedido.editarVentas') }}",
-                    method: 'post',
-                    data: datos,
-                    success: function(data) {
-                        Swal.fire(
-                            'Eliminado !',
-                            data.message,
-                            'success'
-                        ).then((result) => {
-                            if (result.isConfirmed) {
-                                location.href = 'http://localhost:8000/reporte/ventas';
+                Swal.fire({
+                    title: 'Ingrese contraseña de Administrador',
+                    input: 'password',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Continuar',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (valor) => {
+                        return $.ajax({
+                            url: '{{ route('pedido.token') }}',
+                            method: 'post',
+                            data: {
+                                'token': valor
+                            },
+
+                            success: function(data) {
+                                return data
+                            },
+                            error: error => {
+                                Swal.showValidationMessage(
+                                    `Request failed: ${error}`
+                                )
                             }
                         })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.value.response == 'correcto') {
+                        $.ajax({
+                            url: "{{ route('pedido.editarVentas') }}",
+                            method: 'post',
+                            data: datos,
+                            success: function(data) {
+                                Swal.fire(
+                                    'Eliminado !',
+                                    data.message,
+                                    'success'
+                                ).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.href =
+                                            'http://localhost:8000/reporte/lista_ventas';
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Error en contraseña',
+                            icon: 'error',
+                            confirmButtonColor: '#3085d6',
+                        });
                     }
                 })
+                // 
             });
+
 
         </script>
     @endpush

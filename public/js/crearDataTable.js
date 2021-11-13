@@ -48,7 +48,8 @@ $(document).ready(function() {
                 extend: "excelHtml5",
                 text: '<i class="fas fa-file-excel"></i> ',
                 titleAttr: "Exportar a Excel",
-                className: "btn btn-success"
+                className: "btn btn-success",
+                footer: true
             },
             {
                 extend: "pdfHtml5",
@@ -56,13 +57,14 @@ $(document).ready(function() {
                 titleAttr: "Exportar a PDF",
                 className: "btn btn-danger",
                 pageSize: "TABLOID",
-                orientation: "landscape"
+                footer: true
             },
             {
                 extend: "print",
                 text: '<i class="fa fa-print"></i> ',
                 titleAttr: "Imprimir",
                 className: "btn btn-info",
+                footer: true,
                 exportOptions: {
                     stripHtml: false
                 }
@@ -87,4 +89,32 @@ $(document).ready(function() {
         $('#id_producto').val(data[1]);
         $('#id_venta').val(data[0]);
     });
+
+    $("#datatable tbody").on("click", ".detalle", function() {
+        let data = dataTable.row($(this).parents()).data();
+        $('#id_detalle_venta').val(data[0]);
+        $.ajax({
+            url: "http://localhost:8000/venta/listar_pedidos",
+            method: 'post',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                id_pedido: $('#id_detalle_venta').val()
+            },
+            success: function(data) {
+                $('#tabla_detalle tbody').html('')
+                $.each(data,function(i,v){
+                    $('#tabla_detalle tbody').append('<tr>'+
+                        '<td>'+v.id+'</td>'+
+                        '<td>'+v.nombre+'</td>'+
+                        '<td>'+v.cantidad+'</td>'+
+                        '<td>'+v.created_at+'</td>'+
+                        '<td>'+v.precio+'</td>'+
+                        '<td>'+v.total+'</td>'+
+                    '</tr>')
+                })
+            }
+        })
+    })
 });

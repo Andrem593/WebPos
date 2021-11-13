@@ -40,6 +40,7 @@
                                         <th>Nombre</th>
                                         <th>Correo</th>
                                         <th>Tipo de usuario</th>
+                                        <th>token eliminar</th>
                                         <th>Fecha Creación</th>                                
                                         <th></th>
                                     </tr>
@@ -52,6 +53,7 @@
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->tipo_usuario }}</td>
+                                            <td>{{ $user->toke_eliminar }}</td>
                                             <td>{{ $user->created_at }}</td>                                            
 
                                             <td>
