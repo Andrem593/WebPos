@@ -142,7 +142,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <p class="d-flex flex-column">
-                            <span class="text-bold text-lg">$0.00</span>
+                            <span class="text-bold text-lg">${{ number_format($ventas_mes, 2) }}</span>
                             <span>Sales Over Time</span>
                         </p>
                         <p class="ml-auto d-flex flex-column text-right">

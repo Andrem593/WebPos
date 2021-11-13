@@ -66,7 +66,7 @@ class VentaController extends Controller
     }
     public function checkout($valor)
     {
-        if ($valor > Cart::total()) {
+        if (number_format(floatval($valor),2) >= Cart::total()) {
             $cambio = $valor - Cart::total();
             $contenido_cart = Cart::content();
             $id_pedidos = '';
