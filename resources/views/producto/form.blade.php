@@ -31,13 +31,6 @@
                     {!! $errors->first('categoria', '<div class="invalid-feedback">:message</p>') !!}
                 </div>
             </div>
-            <div class="col">
-                <div class="form-group">
-                    {{ Form::label('Nombre del Proveedor') }}
-                    <input type="text" name="nombre_proveedor" class="form-control" placeholder="Ingrese el nombre del Proveedor">
-                    {!! $errors->first('proveedor', '<div class="invalid-feedback">:message</p>') !!}
-                </div>
-            </div>
         </div>
         <div class="row">
             <div class="col">
@@ -47,6 +40,7 @@
                         <option value="unidad">ud-Unidad</option>
                         <option value="gramos">gr-Gramos</option>
                         <option value="kilogramos">kg-Kilogramos</option>
+                        <option value="libras">lb-libras</option>
                         <option value="centimetros">cm-Centimetros</option>
                         <option value="metros">m-Metros</option>
                         <option value="mililitros">ml-Mililitros</option>

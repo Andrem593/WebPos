@@ -172,7 +172,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" id="detalle_venta" class="btn btn-danger">Eliminar</button>
                 </div>
             </div>
         </div>

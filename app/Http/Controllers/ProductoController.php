@@ -109,7 +109,8 @@ class ProductoController extends Controller
     public function update(Request $request, Producto $producto)
     {
         request()->validate(Producto::$rules);
-
+        $categoria = DB::table('categorias')->where('nombre','LIKE','%'.strtoupper($request->nombre_categoria).'%')->first();
+        $request['categoria'] = $categoria->id; 
         $producto->update($request->all());
 
         return redirect()->route('productos.index')

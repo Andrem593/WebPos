@@ -31,12 +31,11 @@ class VentaController extends Controller
     public function productos_proveedor(Request $request)
     {
         $productos = Producto::where('nombre', 'LIKE', '%' . $request->term . '%')
-            ->where('proveedor', '=', $request->proveedor)
             ->orWhere('codigo_barras', 'LIKE', '%' . $request->term . '%')
-            ->where('proveedor', '=', $request->proveedor)->get();
+            ->get();
         $label = [];
         foreach ($productos as $val) {
-            array_push($label, $val->nombre);
+            array_push($label, $val->nombre.' | '.$val->descripcion);
         }
         return $label;
     }
@@ -46,7 +45,9 @@ class VentaController extends Controller
             $request['cantidad'] = 1;
         }
         $cadena = explode('|',$request->producto); 
-        $producto = Producto::where('nombre', trim($cadena[0]))->where('descripcion',trim($cadena[1]))->first();
+        if (!empty($cadena[1])) {            
+            $producto = Producto::where('nombre', trim($cadena[0]))->where('descripcion',trim($cadena[1]))->first();
+        }
         if (empty($producto)) {
             $producto = Producto::where('codigo_barras', trim($request->producto))->first();
         }

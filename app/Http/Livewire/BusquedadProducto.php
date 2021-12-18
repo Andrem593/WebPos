@@ -14,7 +14,7 @@ class BusquedadProducto extends Component
     public function render()
     {
         $caja = caja::where('created_at','LIKE','%'.date('Y-m-d').'%')->first();
-        if ($caja->count() > 0 ) {
+        if (!empty($caja) ) {
             $this->valorInicio = $caja->valor_inicio;
         }
         $ventas = DB::table('ventas')->where('created_at', 'like', '%' . date('Y-m-d') . '%')->get();

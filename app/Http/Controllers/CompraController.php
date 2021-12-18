@@ -42,7 +42,8 @@ class CompraController extends Controller
             'cantidad' => 'required',
             'total_factura' => 'required',
         ]);
-        $producto = Producto::where('nombre', trim($request->nombre_producto))->first();
+        $cadena = explode('|',$request->nombre_producto); 
+        $producto = Producto::where('nombre', trim($cadena[0]))->where('descripcion',trim($cadena[1]))->first();
         if (empty($producto)) {
             $producto = Producto::where('codigo_barras', trim($request->nombre_producto))->first();
         }

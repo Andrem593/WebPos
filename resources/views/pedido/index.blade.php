@@ -90,7 +90,7 @@
                 let rowId = $(this).parents().children("input.rowId").val();
 
                 $.ajax({
-                    url: "pedido/edit/" + rowId,
+                    url: "http://localhost:8000/pedido/edit/" + rowId,
                     method: 'post',
                     data: datos,
                     success: function(data) {

@@ -74,8 +74,7 @@
                 $.ajax({
                     url: "{{ route('search.productos_proveedor') }}",
                     data: {
-                        term: request.term,
-                        proveedor:$('#proveedor').val()
+                        term: request.term
                     },
                     success: function(data) {
                         response(data);

@@ -46,6 +46,7 @@ class homeController extends Controller
         $ventas = DB::table('pedidos')
             ->join('productos', 'productos.id', '=', 'pedidos.id_producto')
             ->join('categorias', 'categorias.id', '=', 'productos.categoria')
+            ->where('pedidos.created_at','LIKE',"%".date('Y-m-d')."%")
             ->select('pedidos.*', 'productos.nombre as nombre_producto',  'productos.costo_proveedor', 'productos.codigo_barras', 'categorias.nombre as nombre_categoria')
             ->get();
 
@@ -87,9 +88,17 @@ class homeController extends Controller
             ->get();
         return view('reportes.inventario', compact('productos'));
     }
-    public function ventas()
+    public function ventas(Request $request)
     {
         $ventas = DB::table('ventas')->get();
+        if (!empty($request->desde)) {
+            $desde = $request->desde;
+            $hasta = date("Y-m-d", strtotime($request->hasta . "+ 1 days"));
+            $ventas = DB::table('ventas')
+                ->where('created_at', '>=', $desde)->where('created_at', '<', $hasta)
+                ->get();
+        }
+
         return view('reportes.ventas_totales', compact('ventas'));
     }
 }

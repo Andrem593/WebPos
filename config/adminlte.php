@@ -248,7 +248,6 @@ return [
             'can'         => 'dashboard',
         ],
         ['header' => 'ADMINISTRACIÓN',
-            'can' =>'productos.index',
         ],
         [
             'text'        => 'Usuarios',
@@ -277,7 +276,6 @@ return [
         [
             'text'        => 'Registro de Compras',
             'route'         => 'compras.create',
-            'can'         => 'compras.create',
             'icon'        => 'fas fa-money-check-alt me-1',
         ],
         [
