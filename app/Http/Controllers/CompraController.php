@@ -69,7 +69,7 @@ class CompraController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -80,7 +80,10 @@ class CompraController extends Controller
      */
     public function edit($id)
     {
-        //
+        $compra = Compra::find($id);
+        $proveedores = Proveedore::all();
+        $producto = Producto::find($compra->id_producto);
+        return view('compras.edit', compact('compra','proveedores','producto'));
     }
 
     /**
@@ -91,8 +94,31 @@ class CompraController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {        
+        $cadena = explode('|',$request->nombre_producto); 
+        $producto = Producto::where('nombre', trim($cadena[0]))->where('descripcion',trim($cadena[1]))->first();
+        if (empty($producto)) {
+            $producto = Producto::where('codigo_barras', trim($request->nombre_producto))->first();
+        }
+        //pendiente arreglar redirigir a la vista correcta 
+        if (empty($producto)) {
+            return redirect()->route('compras.create')
+                ->with('error', 'Escoga un producto valido.');
+        }
+        $compra = Compra::find($id);
+        $request['id_producto'] = $producto->id;
+        $producto->stock = $producto->stock + ($request->cantidad - $compra->cantidad);
+        $producto->cantidad = $producto->cantidad + ($request->cantidad -$compra->cantidad);
+        $producto->costo_proveedor = $request->costo;
+        $producto->save();
+        Compra::find($id)->update([
+            'cantidad'=>$request->cantidad,
+            'total_factura'=>$request->total_factura,
+            'numero_factura'=>$request->numero_factura,
+            'costo'=>$request->costo
+        ]);
+        return redirect()->route('reporte.compras')
+            ->with('success', 'Compra Actualizada correctamente.');
     }
 
     /**

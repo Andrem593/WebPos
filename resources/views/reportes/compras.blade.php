@@ -60,6 +60,7 @@
                                         <th>CANTIDAD</th>
                                         <th>COSTO UNITARIO</th>
                                         <th>COSTO TOTAL</th>
+                                        <th>OPCIONES</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -76,6 +77,7 @@
                                             <td>{{ $compra->cantidad }}</td>
                                             <td>${{ number_format($compra->costo_proveedor, 2) }}</td>
                                             <td>${{ number_format($compra->total_factura, 2) }}</td>
+                                            <td><a href="{{route('compras.edit',$compra->id)}}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Editar</a></td>
                                         </tr>
                                         @php
                                             $total_factura += $compra->total_factura;

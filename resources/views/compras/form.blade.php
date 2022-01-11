@@ -21,7 +21,7 @@
         <div class="form-group">
             {{ Form::label('Escoja el Producto') }}
             <div class="input-group">
-                <input type="search" id="buscar" name="nombre_producto" class="form-control"
+                <input type="search" id="buscar" name="nombre_producto" class="form-control" value="{{!empty($producto->nombre)  ? $producto->nombre.' | '.$producto->descripcion :  ''}}"
                     placeholder="Escribe el nombre del producto o codigo de barras">
                 <div class="input-group-append">
                     <a class="btn btn-default">
